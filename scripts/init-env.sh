@@ -13,7 +13,7 @@ echo "PROJECTS_DIR: ${PROJECTS_DIR}"
 # Init Kafka environment
 #
 unset KAFKA_HOME
-export KAFKA_HOME="$( cd ${PROJECTS_DIR}/kafka && pwd )"
+export KAFKA_HOME="$( cd ${PROJECTS_DIR}/run-time-artifacts/kafka && pwd )"
 echo "KAFKA_HOME: ${KAFKA_HOME}"
 unset LOG_DIR
 export LOG_DIR="${PROJECTS_DIR}/logs"

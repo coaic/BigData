@@ -26,6 +26,8 @@ unset KAFKA_JMX_OPTS
 export KAFKA_JMX_OPTS="--add-modules java.xml.bind -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false  -Dcom.sun.management.jmxremote.ssl=false "
 unset ZOOKEPER_LOCATION
 export ZOOKEEPER_LOCATION="localhost:2181"
+unset BROKER_LOCATION
+export BROKER_LOCATION="localhost:9092"
 #
 # start zookeeper
 #
@@ -52,4 +54,24 @@ run_create_topic() {
   unset KAFKA_GC_LOG_OPTS
   ${KAFKA_HOME}/bin/kafka-topics.sh --create --zookeeper ${ZOOKEEPER_LOCATION} --replication-factor 1 --partitions 1 --topic $1
 }
-
+#
+# send messages to topic
+#
+run_console_producer() {
+  unset KAFKA_GC_LOG_OPTS
+  ${KAFKA_HOME}/bin/kafka-console-producer.sh --broker-list ${BROKER_LOCATION} --topic $1
+}
+#
+# read ALL messages from a topic
+#
+run_console_consumer_from_beginning() {
+  unset KAFKA_GC_LOG_OPTS
+  ${KAFKA_HOME}/bin/kafka-console-consumer.sh --bootstrap-server ${BROKER_LOCATION} --topic $1 --from-beginning
+}
+#
+# read unread messages from a topic
+#
+run_console_consumer() {
+  unset KAFKA_GC_LOG_OPTS
+  ${KAFKA_HOME}/bin/kafka-console-consumer.sh --bootstrap-server ${BROKER_LOCATION} --topic $1
+}

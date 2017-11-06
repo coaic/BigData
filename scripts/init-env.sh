@@ -21,7 +21,11 @@ echo "LOG_DIR: ${LOG_DIR}"
 unset KAFKA_LOG_DIRS
 export KAFKA_LOG_DIRS=${PROJECTS_DIR}/tmp/kafka
 unset ZOOKEEPER_LOGS_DIR
+unset JSON_DATA_GENERATOR
+export JSON_DATA_GENERATOR="json-data-generator"
 export ZOOKEEPER_LOGS_DIR=${PROJECTS_DIR}/tmp/zookeeper
+unset JSON_DATA_GENERATOR_VERSION
+export JSON_DATA_GENERATOR_VERSION="1.3.1-SNAPSHOT"
 unset GC_LOG_FILE_NAME
 GC_LOG_FILE_NAME="kafka_gc.log"
 unset KAFKA_GC_LOG_OPTS
@@ -46,7 +50,13 @@ run_kafka_server() {
   # unset EXTRA_ARGS
   # export EXTRA_ARGS=""
   sed -e "s:^\(log\.dirs=\)\(.*\):\1${PROJECTS_DIR}/tmp/kafka:" -i .bak ${PROJECTS_DIR}/config/server.properties
-  #${KAFKA_HOME}/bin/kafka-server-start.sh ${PROJECTS_DIR}/config/server.properties &
+  ${KAFKA_HOME}/bin/kafka-server-start.sh ${PROJECTS_DIR}/config/server.properties &
+}
+#
+# Run data generator into Unmasked topic
+#
+run_json_data_generator() {
+  java -jar ${PROJECTS_DIR}/run-time-artifacts/${JSON_DATA_GENERATOR}-${JSON_DATA_GENERATOR_VERSION}/${JSON_DATA_GENERATOR}-${JSON_DATA_GENERATOR_VERSION}.jar kafkaSimConfig.json
 }
 #
 # list topics
@@ -61,6 +71,13 @@ run_list_topics() {
 run_create_topic() {
   unset KAFKA_GC_LOG_OPTS
   ${KAFKA_HOME}/bin/kafka-topics.sh --create --zookeeper ${ZOOKEEPER_LOCATION} --replication-factor 1 --partitions 1 --topic $1
+}
+#
+# delete topic
+#
+run_delete_topic() {
+  unset KAFKA_GC_LOG_OPTS
+  ${KAFKA_HOME}/bin/kafka-topics.sh --delete --zookeeper ${ZOOKEEPER_LOCATION} --topic $1
 }
 #
 # send messages to topic

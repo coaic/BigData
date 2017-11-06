@@ -4,6 +4,6 @@ kafka-*
 logs/*
 run-time-artifacts/*.tar
 run-time-artifacts/json-data-generator-*/*
-run-time-artifacts/json-data-generator/conf/logs/
+run-time-artifacts/json-data-generator/logs/
 tmp/*
 config/*.bak

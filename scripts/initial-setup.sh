@@ -1,8 +1,17 @@
 #!/bin/bash
 #
+export KAFKA_VERSION=2.12-1.0.0
+export KAFKA_MIRROR="http://mirror.intergrid.com.au/apache/kafka/1.0.0/kafka_${KAFKA_VERSION}.tgz"
+export RUNTIME_ARTIFACTS="./run-time-artifacts"
+#
+mkdir -p ${RUNTIME_ARTIFACTS}
+#
 # Kafka
 #
-wget http://mirror.ventraip.net.au/apache/kafka/0.11.0.1/kafka_2.12-0.11.0.1.tgz
+cd ${RUNTIME_ARTIFACTS}
+wget ${KAFKA_MIRROR}
+ln -s kafka_${KAFKA_VERSION} kafka
+cd ..
 #
 # Scala Kafka Streams Examples
 #
@@ -11,7 +20,6 @@ git clone git@github.com:coaic/kafka-streams-scala-examples.git
 # JSON data generator
 #
 git clone git@github.com:coaic/json-data-generator.git
-mkdir -p run-time-artifacts
 cd json-data-generator
 mvn clean package
 cp target/json-data-generator-1.0.0-bin.tar ../run-time-artifacts

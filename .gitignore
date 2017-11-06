@@ -6,3 +6,4 @@ run-time-artifacts/*.tar
 run-time-artifacts/json-data-generator-*/*
 run-time-artifacts/json-data-generator/conf/logs/
 tmp/*
+config/*.bak

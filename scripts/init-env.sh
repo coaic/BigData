@@ -18,6 +18,10 @@ echo "KAFKA_HOME: ${KAFKA_HOME}"
 unset LOG_DIR
 export LOG_DIR="${PROJECTS_DIR}/logs"
 echo "LOG_DIR: ${LOG_DIR}"
+unset KAFKA_LOG_DIRS
+export KAFKA_LOG_DIRS=${PROJECTS_DIR}/tmp/kafka
+unset ZOOKEEPER_LOGS_DIR
+export ZOOKEEPER_LOGS_DIR=${PROJECTS_DIR}/tmp/zookeeper
 unset GC_LOG_FILE_NAME
 GC_LOG_FILE_NAME="kafka_gc.log"
 unset KAFKA_GC_LOG_OPTS
@@ -32,13 +36,17 @@ export BROKER_LOCATION="localhost:9092"
 # start zookeeper
 #
 run_zookeeper() {
-  ${KAFKA_HOME}/bin/zookeeper-server-start.sh ${KAFKA_HOME}/config/zookeeper.properties &
+  sed -e "s:^\(dataDir=\)\(.*\):\1${PROJECTS_DIR}/tmp/zookeeper:" -i .bak ${PROJECTS_DIR}/config/zookeeper.properties
+  ${KAFKA_HOME}/bin/zookeeper-server-start.sh ${PROJECTS_DIR}/config/zookeeper.properties &
 }
 #
 # start server/broker
 #
 run_kafka_server() {
-  ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_HOME}/config/server.properties &
+  # unset EXTRA_ARGS
+  # export EXTRA_ARGS=""
+  sed -e "s:^\(log\.dirs=\)\(.*\):\1${PROJECTS_DIR}/tmp/kafka:" -i .bak ${PROJECTS_DIR}/config/server.properties
+  #${KAFKA_HOME}/bin/kafka-server-start.sh ${PROJECTS_DIR}/config/server.properties &
 }
 #
 # list topics
